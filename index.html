@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>성경 번역기</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="logo">✝ 성경<span>번역기</span></div>
+  <div class="header-api">
+    <button class="btn-api" onclick="toggleApi()">🔑 API 키</button>
+  </div>
+</header>
+
+<div class="api-dropdown" id="apiDropdown">
+  <label>Gemini API 키</label>
+  <input type="password" id="apiKeyInput" placeholder="AIzaSy..." />
+  <p class="api-hint">브라우저에만 저장 · 외부 전송 없음</p>
+  <button class="btn-save" onclick="saveApiKey()">저장</button>
+</div>
+
+<main>
+  <div class="lang-bar">
+    <div class="lang-label">현대어</div>
+    <div class="lang-arrow">→</div>
+    <div class="lang-label right">✦ 성경어 ✦</div>
+  </div>
+
+  <div class="translate-box">
+    <div class="panel panel-left">
+      <textarea id="input" placeholder="공부하기 싫어&#10;시험 망했다&#10;배고파 죽겠어" maxlength="200"></textarea>
+      <div class="panel-footer">
+        <span class="char-count" id="charCount">0 / 200</span>
+        <button class="btn-translate" id="translateBtn" onclick="translate()">번역</button>
+      </div>
+    </div>
+
+    <div class="panel output-panel">
+      <div class="output-text" id="outputText">
+        <span class="output-placeholder">번역 결과가 여기 나타나리라</span>
+      </div>
+      <div class="verse-ref" id="verseRef"></div>
+    </div>
+  </div>
+
+  <div class="error-bar" id="errorBar"></div>
+</main>
+
+<footer>— 이 사이트는 오직 재미를 위하여 만들어졌느니라 —</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
