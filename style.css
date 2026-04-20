@@ -1,0 +1,318 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Nanum+Myeongjo:wght@700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --green: #03C75A;
+  --green-dark: #02a34a;
+  --green-light: #e8faf1;
+  --border: #e0e0e0;
+  --text: #191919;
+  --gray: #888;
+  --gold: #b8860b;
+}
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: #f5f5f5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 헤더 */
+header {
+  background: var(--green);
+  padding: 0 20px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 2px 8px rgba(3,199,90,0.3);
+}
+
+.logo {
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.logo span { opacity: 0.85; }
+
+.btn-api {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  color: #fff;
+  cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: background 0.15s;
+}
+
+.btn-api:hover { background: rgba(255,255,255,0.3); }
+
+/* API 드롭다운 */
+.api-dropdown {
+  position: fixed;
+  top: 60px;
+  right: 16px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  width: min(320px, calc(100vw - 32px));
+  box-shadow: 0 8px 28px rgba(0,0,0,0.14);
+  display: none;
+  z-index: 100;
+}
+
+.api-dropdown.open { display: block; }
+
+.api-dropdown label {
+  font-size: 0.78rem;
+  color: var(--gray);
+  margin-bottom: 8px;
+  display: block;
+  font-weight: 500;
+}
+
+.api-dropdown input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.85rem;
+  outline: none;
+  font-family: monospace;
+  color: var(--text);
+  transition: border-color 0.15s;
+}
+
+.api-dropdown input:focus { border-color: var(--green); }
+
+.btn-save {
+  margin-top: 10px;
+  width: 100%;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: background 0.15s;
+}
+
+.btn-save:hover { background: var(--green-dark); }
+
+.api-hint {
+  font-size: 0.72rem;
+  color: #bbb;
+  margin-top: 6px;
+}
+
+/* 메인 */
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 16px 32px;
+}
+
+.translator {
+  width: 100%;
+  max-width: 640px;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+/* 패널 공통 */
+.panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-label {
+  padding: 12px 18px 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.panel-label.gold { color: var(--gold); }
+
+/* 입력 */
+.panel-top { background: #fff; }
+
+textarea {
+  border: none;
+  outline: none;
+  padding: 12px 18px 14px;
+  font-size: 1rem;
+  font-family: 'Noto Sans KR', sans-serif;
+  color: var(--text);
+  resize: none;
+  height: 140px;
+  line-height: 1.7;
+  background: transparent;
+  width: 100%;
+}
+
+textarea::placeholder { color: #ccc; }
+
+.panel-footer {
+  padding: 10px 16px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.char-count { font-size: 0.75rem; color: #ccc; }
+
+.btn-translate {
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: 22px;
+  padding: 10px 32px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: background 0.15s, transform 0.1s;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(3,199,90,0.35);
+}
+
+.btn-translate:hover:not(:disabled) {
+  background: var(--green-dark);
+  transform: translateY(-1px);
+}
+
+.btn-translate:active:not(:disabled) { transform: translateY(0); }
+.btn-translate:disabled { background: #b2dfcc; cursor: not-allowed; box-shadow: none; }
+
+/* 구분선 */
+.divider {
+  position: relative;
+  height: 1px;
+  background: var(--border);
+  margin: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.divider-icon {
+  position: absolute;
+  background: #fff;
+  padding: 0 10px;
+  font-size: 0.75rem;
+  color: var(--green);
+}
+
+/* 출력 */
+.panel-bottom { background: var(--green-light); }
+
+.output-text {
+  padding: 14px 18px 10px;
+  font-size: 1.05rem;
+  font-family: 'Nanum Myeongjo', serif;
+  color: #2d4a00;
+  line-height: 2;
+  white-space: pre-wrap;
+  min-height: 140px;
+}
+
+.output-placeholder {
+  color: #ccc;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+.verse-ref {
+  padding: 0 18px 16px;
+  font-size: 0.8rem;
+  color: var(--gold);
+  font-family: 'Nanum Myeongjo', serif;
+  font-style: italic;
+  text-align: right;
+}
+
+/* 로딩 */
+.loading-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: bounce 1.2s infinite;
+}
+
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* 에러 */
+.error-bar {
+  width: 100%;
+  max-width: 640px;
+  margin-top: 12px;
+  background: #fff0f0;
+  border: 1px solid #ffd0d0;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 0.83rem;
+  color: #c0392b;
+  display: none;
+}
+
+.error-bar.visible { display: block; }
+
+footer {
+  text-align: center;
+  padding: 24px 16px;
+  font-size: 0.72rem;
+  color: #ccc;
+}
+
+/* 모바일 */
+@media (max-width: 480px) {
+  header { height: 48px; }
+
+  main { padding: 14px 12px 28px; }
+
+  .translator { border-radius: 12px; }
+
+  textarea { height: 120px; font-size: 0.95rem; }
+
+  .output-text { font-size: 1rem; min-height: 120px; }
+
+  .btn-translate { padding: 10px 26px; font-size: 0.9rem; }
+}
