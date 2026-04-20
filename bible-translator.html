@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>성경 번역기 📜</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background: #1a0e00;
+      background-image:
+        radial-gradient(ellipse at top, #3d1f00 0%, #1a0e00 60%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      font-family: 'Nanum Myeongjo', serif;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .cross {
+      font-size: 32px;
+      color: #c9a84c;
+      margin-bottom: 12px;
+      display: block;
+      letter-spacing: 6px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #f0d98c;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 12px rgba(201,168,76,0.4);
+    }
+
+    .subtitle {
+      margin-top: 10px;
+      color: #a0845a;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #3d2a0e;
+      margin: 12px 0;
+    }
+
+    .card {
+      background: linear-gradient(160deg, #2d1a06 0%, #1f1106 100%);
+      border: 1px solid #4a3010;
+      border-radius: 4px;
+      padding: 32px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(201,168,76,0.1);
+    }
+
+    label {
+      display: block;
+      color: #c9a84c;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    textarea, input[type="password"] {
+      width: 100%;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid #3d2a0e;
+      border-radius: 2px;
+      color: #e8d5a3;
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 1rem;
+      padding: 14px 16px;
+      resize: none;
+      outline: none;
+      transition: border-color 0.2s;
+      caret-color: #c9a84c;
+    }
+
+    textarea:focus, input[type="password"]:focus {
+      border-color: #c9a84c;
+    }
+
+    textarea { height: 100px; }
+    input[type="password"] { height: 44px; }
+
+    .input-hint {
+      color: #6b4e2a;
+      font-size: 0.78rem;
+      margin-top: 6px;
+    }
+
+    .btn {
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px;
+      background: linear-gradient(135deg, #c9a84c 0%, #a07830 100%);
+      border: none;
+      border-radius: 2px;
+      color: #1a0e00;
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+    .btn:active:not(:disabled) { transform: translateY(0); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .output-section {
+      margin-top: 28px;
+      display: none;
+    }
+
+    .output-section.visible { display: block; }
+
+    .scroll-box {
+      background: linear-gradient(160deg, #f5e6c8 0%, #e8d0a0 50%, #f0ddb8 100%);
+      border: 1px solid #c9a070;
+      border-radius: 2px;
+      padding: 28px 28px 24px;
+      position: relative;
+      box-shadow: inset 0 0 20px rgba(139,90,30,0.15);
+    }
+
+    .scroll-box::before, .scroll-box::after {
+      content: '';
+      display: block;
+      height: 8px;
+      background: linear-gradient(90deg, #b8860b, #daa520, #b8860b);
+      border-radius: 2px;
+      margin-bottom: 16px;
+    }
+
+    .scroll-box::after {
+      margin-bottom: 0;
+      margin-top: 16px;
+    }
+
+    .output-text {
+      color: #2d1a00;
+      font-size: 1.15rem;
+      line-height: 2;
+      font-weight: 700;
+      text-align: center;
+      white-space: pre-wrap;
+    }
+
+    .verse-ref {
+      margin-top: 14px;
+      text-align: right;
+      color: #8b6030;
+      font-size: 0.82rem;
+      font-style: italic;
+    }
+
+    .loading-dots span {
+      animation: blink 1.2s infinite;
+      color: #c9a84c;
+      font-size: 1.5rem;
+    }
+
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes blink {
+      0%, 80%, 100% { opacity: 0; }
+      40% { opacity: 1; }
+    }
+
+    .error-text {
+      color: #c0392b;
+      font-size: 0.88rem;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .api-section {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #3d2a0e;
+    }
+
+    .api-toggle {
+      color: #6b4e2a;
+      font-size: 0.8rem;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      background: none;
+      border: none;
+      font-family: 'Nanum Myeongjo', serif;
+      letter-spacing: 1px;
+    }
+
+    .api-toggle:hover { color: #c9a84c; }
+
+    .api-input-wrap { margin-top: 10px; display: none; }
+    .api-input-wrap.open { display: block; }
+
+    .footer {
+      text-align: center;
+      margin-top: 28px;
+      color: #3d2a0e;
+      font-size: 0.78rem;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="cross">✝</span>
+    <h1>성경 번역기</h1>
+    <p class="subtitle">범사에 번역하라 · 쉬지 말고 번역하라</p>
+  </div>
+
+  <div class="card">
+    <label>너의 푸념을 적으라</label>
+    <textarea id="input" placeholder="예) 공부하기 싫어&#10;예) 시험 망했다&#10;예) 배고파 죽겠어" maxlength="200"></textarea>
+
+    <button class="btn" id="translateBtn" onclick="translate()">✦ 번역하라 ✦</button>
+
+    <div id="errorMsg" class="error-text"></div>
+
+    <div class="output-section" id="outputSection">
+      <label style="margin-top:0; margin-bottom:14px;">성경의 말씀으로 이르시되</label>
+      <div class="scroll-box">
+        <div class="output-text" id="outputText"></div>
+        <div class="verse-ref" id="verseRef"></div>
+      </div>
+    </div>
+
+    <div class="api-section">
+      <button class="api-toggle" onclick="toggleApiInput()">🔑 API 키 설정</button>
+      <div class="api-input-wrap" id="apiInputWrap">
+        <input type="password" id="apiKeyInput" placeholder="AIzaSy..." />
+        <p class="input-hint">키는 브라우저에만 저장되며 외부로 전송되지 않습니다.</p>
+        <button class="btn" style="margin-top:10px; font-size:0.85rem; padding:10px;" onclick="saveApiKey()">저장하라</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="footer">— 이 사이트는 오직 재미를 위하여 만들어졌느니라 —</p>
+</div>
+
+<script>
+  const STORAGE_KEY = 'bible_translator_api_key';
+
+  function getApiKey() {
+    return localStorage.getItem(STORAGE_KEY) || '';
+  }
+
+  function saveApiKey() {
+    const key = document.getElementById('apiKeyInput').value.trim();
+    if (!key.startsWith('AIza')) {
+      showError('올바른 Gemini API 키를 입력하소서 (AIzaSy로 시작하는도다)');
+      return;
+    }
+    localStorage.setItem(STORAGE_KEY, key);
+    document.getElementById('apiInputWrap').classList.remove('open');
+    showError('');
+    showToast('API 키가 저장되었나이다');
+  }
+
+  function toggleApiInput() {
+    const wrap = document.getElementById('apiInputWrap');
+    wrap.classList.toggle('open');
+    if (wrap.classList.contains('open')) {
+      const saved = getApiKey();
+      if (saved) document.getElementById('apiKeyInput').value = saved;
+    }
+  }
+
+  function showError(msg) {
+    document.getElementById('errorMsg').textContent = msg;
+  }
+
+  function showToast(msg) {
+    showError(msg);
+    setTimeout(() => showError(''), 2500);
+  }
+
+  async function translate() {
+    const input = document.getElementById('input').value.trim();
+    const apiKey = getApiKey();
+
+    if (!input) {
+      showError('번역할 말씀을 입력하소서');
+      return;
+    }
+    if (!apiKey) {
+      showError('먼저 API 키를 설정하소서 (아래 🔑 버튼을 누르라)');
+      document.getElementById('apiInputWrap').classList.add('open');
+      return;
+    }
+
+    const btn = document.getElementById('translateBtn');
+    const outputSection = document.getElementById('outputSection');
+    const outputText = document.getElementById('outputText');
+    const verseRef = document.getElementById('verseRef');
+
+    btn.disabled = true;
+    showError('');
+    outputSection.classList.add('visible');
+    outputText.innerHTML = '<span class="loading-dots"><span>·</span><span>·</span><span>·</span></span>';
+    verseRef.textContent = '';
+
+    const prompt = `너는 현대인의 일상적인 푸념이나 불평을 한국어 성경(개역개정) 특유의 고풍스러운 어투로 번역하는 재미있는 번역기야.
+
+규칙:
+1. 반드시 한국어 개역개정 성경체를 사용해 (~하였나이다, ~하도다, ~하리로다, ~하노라, ~하였더라 등)
+2. 원래 감정/상황은 유지하되, 극적이고 웅장하게 표현해
+3. 번역 결과만 1~3문장으로 출력해 (설명 없이)
+4. 마지막 줄에 "[가상의 성경 책 이름 장:절]" 형식으로 출처를 지어내 (실제 성경 구절 X, 재미를 위해 창작)
+5. 번역 결과와 출처를 빈 줄로 구분해
+
+입력: "${input}"`;
+
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { maxOutputTokens: 300 }
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        if (res.status === 400) throw new Error('API 키가 유효하지 아니하도다. 키를 다시 확인하소서.');
+        if (res.status === 429) throw new Error('잠시 기다리라. 너무 많이 구하였느니라.');
+        throw new Error(err.error?.message || `오류가 임하였도다 (${res.status})`);
+      }
+
+      const data = await res.json();
+      const fullText = data.candidates[0].content.parts[0].text.trim();
+
+      const lines = fullText.split('\n').filter(l => l.trim());
+      const refLine = lines[lines.length - 1];
+      const isRef = /\[.+\d+:\d+\]/.test(refLine);
+
+      if (isRef) {
+        outputText.textContent = lines.slice(0, -1).join('\n');
+        verseRef.textContent = refLine;
+      } else {
+        outputText.textContent = fullText;
+        verseRef.textContent = '';
+      }
+
+    } catch (e) {
+      outputSection.classList.remove('visible');
+      showError(e.message || '알 수 없는 오류가 임하였도다');
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  document.getElementById('input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      translate();
+    }
+  });
+</script>
+</body>
+</html>
